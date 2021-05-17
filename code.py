@@ -197,7 +197,7 @@ def tensorsFromPair(pair):
     return (input_tensor, target_tensor)
 
 
-teacher_forcing_ratio = 0.5
+teacher_forcing_ratio = 0.6
 
 
 def train(input_tensor, target_tensor, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion, max_length=MAX_LENGTH):
@@ -368,11 +368,11 @@ def evaluateRandomly(encoder, decoder, n=10):
         print('<', output_sentence)
         print('')
 
-hidden_size = 256
+hidden_size = 512
 encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
+attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.05).to(device)
 
-trainIters(encoder1, attn_decoder1, 75000, print_every=5000, learning_rate=0.02)
+trainIters(encoder1, attn_decoder1, 100000, print_every=5000, learning_rate=0.02)
 
 evaluateRandomly(encoder1, attn_decoder1)
 
