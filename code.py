@@ -82,7 +82,7 @@ MAX_LENGTH = 10
 
 def filterPair(p):
     return len(p[0].split(' ')) < MAX_LENGTH and \
-        len(p[1].split(' ')) < MAX_LENGTH and \
+        len(p[1].split(' ')) < MAX_LENGTH
         #p[1].startswith(eng_prefixes)
 
 
