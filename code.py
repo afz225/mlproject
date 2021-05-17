@@ -317,7 +317,8 @@ def showPlot(points):
     loc = ticker.MultipleLocator(base=0.2)
     ax.yaxis.set_major_locator(loc)
     plt.plot(points)
-
+    plt.savefig('loss_graph.png')
+    
 
 
 def evaluate(encoder, decoder, sentence, max_length=MAX_LENGTH):
@@ -371,7 +372,7 @@ hidden_size = 256
 encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
 attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
 
-trainIters(encoder1, attn_decoder1, 75000, print_every=5000)
+trainIters(encoder1, attn_decoder1, 75000, print_every=5000, learning_rate=0.02)
 
 evaluateRandomly(encoder1, attn_decoder1)
 
