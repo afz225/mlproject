@@ -63,7 +63,7 @@ def readLangs(lang1, lang2, reverse=False):
         read().strip().split('\n')
 
     # Split every line into pairs and normalize
-    pairs = [[normalizeString(s) for s in l.split('|')] for l in lines]
+    pairs = [[normalizeString(s) for s in l.split(';')] for l in lines]
 
     # Reverse pairs, make Lang instances
     if reverse:
@@ -105,7 +105,7 @@ def prepareData(lang1, lang2, reverse=False):
     return input_lang, output_lang, pairs
 
 
-input_lang, output_lang, pairs = prepareData('demotic', 'english')
+input_lang, output_lang, pairs = prepareData('egyptian', 'english')
 print(random.choice(pairs))
 
 class EncoderRNN(nn.Module):
@@ -372,7 +372,7 @@ hidden_size = 512
 encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
 attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.05).to(device)
 
-trainIters(encoder1, attn_decoder1, 90000, print_every=5000, learning_rate=0.02)
+trainIters(encoder1, attn_decoder1, 90000, print_every=5000, learning_rate=0.01)
 
 evaluateRandomly(encoder1, attn_decoder1)
 
