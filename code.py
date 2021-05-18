@@ -368,14 +368,21 @@ def evaluateRandomly(encoder, decoder, n=10):
         print('<', output_sentence)
         print('')
 
-hidden_size = 512
-encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.05).to(device)
 
-trainIters(encoder1, attn_decoder1, 90000, print_every=5000, learning_rate=0.01)
 
-evaluateRandomly(encoder1, attn_decoder1)
 
-torch.save(encoder1.state_dict(),'myencoder.pt')
-torch.save(attn_decoder1.state_dict(), 'mydecoder.pt')
 
+
+def main():
+    hidden_size = 512
+    encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
+    attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.05).to(device)
+    trainIters(encoder1, attn_decoder1, 90000, print_every=5000, learning_rate=0.01)
+
+    evaluateRandomly(encoder1, attn_decoder1)
+
+    torch.save(encoder1.state_dict(),'myencoder.pt')
+    torch.save(attn_decoder1.state_dict(), 'mydecoder.pt')
+
+if __name__ == '__main__':
+    main()
