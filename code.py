@@ -105,7 +105,7 @@ def prepareData(lang1, lang2, reverse=False):
     return input_lang, output_lang, pairs
 
 
-input_lang, output_lang, pairs = prepareData('egyptian', 'english')
+input_lang, output_lang, pairs = prepareData('egyptian2', 'english')
 print(random.choice(pairs))
 
 class EncoderRNN(nn.Module):
