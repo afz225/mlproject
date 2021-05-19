@@ -1,7 +1,10 @@
+# coding=utf-8
 import re
 
-f = open('./training/beinlich.txt', 'r')
 
+
+
+f = open('./training/beinlich.txt', 'r')
 
 list = []
 
@@ -9,7 +12,7 @@ list = []
 for line in f:
     entry = []
     seperated = line.split('|')
-    entry.append(seperated[0].replace('A', 'ꜣ').replace('j', 'i҆').replace('a', 'ꜥ').replace('H', 'ḥ').replace('x', 'ḫ').replace('X', 'ẖ').replace('S', 'š').replace('q', 'ḳ').replace('T', 'ṯ').replace('D','ḏ').replace('jj', 'y'))
+    entry.append(seperated[0])
     temp = seperated[3]
     if re.sub('\([^>]+\)', '', seperated[3]) != '':
         temp = re.sub('\([^>]+\)', '', seperated[3])
@@ -17,20 +20,23 @@ for line in f:
     if '[' in temp:
         temp = temp[temp.find('[')+1:temp.find(']')]+'\n'
     temp = temp.strip()
+    print(entry)
     if temp != '':
         temp = temp.replace('oe', 'ö').replace('ae', 'ä').replace('Ue', 'ü').replace('Oe', 'ö').replace('Ae', 'ä')
 
         if 'eue' not in temp:
             temp = temp.replace('ue', 'ü')
         entry.append(temp + '\n')
+
         list.append(entry)
+
 f.close()
 
 german = open('./training/german.txt', 'w')
 
 # loop jots down german translations in order to be processed externally and translated to english
-for entry in list:
-    german.write(entry[1])
+# for entry in list:
+#     german.write(entry[1])
 
 german.close()
 
@@ -58,6 +64,7 @@ for line in o:
 o.close()
 
 final = open('./training/final_dict.txt', 'w')
+
 for line in final_list:
     final.write(line)
 final.close()
