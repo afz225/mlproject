@@ -1,5 +1,5 @@
 
-from code import prepareData, normalizeString, EncoderRNN, AttnDecoderRNN, evaluate
+from code import prepareData, normalizeString, EncoderRNN, AttnDecoderRNN, evaluate, input_lang, output_lang, device
 
 import torch
 import torch.nn as nn
@@ -12,25 +12,51 @@ import pandas as pd
 import os
 import re
 import random
-lang1 = 'demotic'
-lang2 = 'english'
-source, target, pairs = prepareData(lang1, lang2)
+# lang1 = 'egyptian'
+# lang2 = 'english'
+# source, target, pairs = prepareData(lang1, lang2)
 
-randomize = random.choice(pairs)
-print('random sentence {}'.format(randomize))
+
+
+# hidden_size 
 
 
 hidden_size = 512
+encoder1 = EncoderRNN(input_lang.n_words, hidden_size)
+attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.05)
 
-#create encoder-decoder model
-encoder = EncoderRNN(input_size, hidden_size, embed_size, num_layers)
-decoder = AttnDecoderRNN(output_size, hidden_size, embed_size, num_layers)
+encoder1.load_state_dict(torch.load('./myencoder.pt', map_location=torch.device('cpu')))
+attn_decoder1.load_state_dict(torch.load('./mydecoder.pt', map_location=torch.device('cpu')))
 
-# model = Seq2Seq(encoder, decoder, device).to(device)
+# print(' '.join(evaluate(encoder1, attn_decoder1, normalizeString(input('input egyptian here: ')))[0]))
+
+import sacrebleu
+from sacremoses import MosesDetokenizer
+md = MosesDetokenizer(lang='en')
+
+reference = []
+candidate = []
+
+file = open('./training/egyptian-english.txt', 'r')
+
+for i in range(1000):
+	line = file.readline().strip().split(';')
+	
+	if line[0] != '' and line[1] != '':
+		reference.append(md.detokenize(normalizeString(line[1]).strip().split(' ')))
+		temp = ' '.join(evaluate(encoder1, attn_decoder1, normalizeString(line[0]))[0])
+		temp = temp.strip()
+		temp = temp.split(' ')
+		temp.pop()
+		candidate.append(md.detokenize(temp))
 
 
 
-encoder.load_state_dict(torch.load('./mytraining.pt'))
-decoder.load_state_dict(torch.load('./mytraining.pt'))
+file.close()
 
-evaluate(encoder, decoder, normalizeString(input()))
+print(reference[501])
+print(candidate[501])
+
+print(len(reference))
+print(len(candidate))
+print('corpus_bleu: %f' % sacrebleu.corpus_bleu(reference, candidate))
